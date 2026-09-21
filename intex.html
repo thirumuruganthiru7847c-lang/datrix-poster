@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DATRIX - Coming Soon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    background:#050507;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    font-family:'Rajdhani', sans-serif;
+  }
+
+  .poster {
+    position:relative;
+    width:1080px;
+    height:1350px;
+    background:radial-gradient(circle at 50% 20%, #10131c 0%, #050507 65%);
+    overflow:hidden;
+    border:2px solid #1a1e28;
+  }
+
+  /* hazard stripe bars */
+  .hazard {
+    position:absolute;
+    left:0; right:0;
+    height:26px;
+    background:repeating-linear-gradient(135deg, #FFC400 0 24px, #0A0A0F 24px 48px);
+    z-index:5;
+  }
+  .hazard.top { top:0; }
+  .hazard.bottom { bottom:0; }
+
+  /* circuit background */
+  .circuit-layer {
+    position:absolute; inset:0;
+    z-index:1;
+    opacity:0.55;
+  }
+
+  .grid-overlay {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.05) 1px, transparent 1px);
+    background-size:40px 40px;
+    z-index:1;
+  }
+
+  .glow-orb {
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    z-index:1;
+  }
+  .glow-orb.o1 { width:420px; height:420px; background:#FF1B4C; opacity:0.22; top:-120px; left:-120px; }
+  .glow-orb.o2 { width:500px; height:500px; background:#00F0FF; opacity:0.16; bottom:-160px; right:-160px; }
+  .glow-orb.o3 { width:380px; height:380px; background:#B026FF; opacity:0.18; top:40%; left:50%; transform:translate(-50%,-50%); }
+
+  .scanline {
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
+    z-index:2;
+    pointer-events:none;
+  }
+
+  .content {
+    position:relative;
+    z-index:6;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:70px 60px 50px;
+    text-align:center;
+  }
+
+  .college-banner {
+    border:1px solid rgba(0,240,255,0.5);
+    background:rgba(0,240,255,0.06);
+    padding:12px 34px;
+    border-radius:2px;
+    margin-top:12px;
+  }
+  .college-name {
+    font-family:'Orbitron', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:4px;
+    color:#E9FBFF;
+    text-shadow:0 0 12px rgba(0,240,255,0.8);
+  }
+  .college-sub {
+    font-size:14px;
+    letter-spacing:6px;
+    color:#7DE8F5;
+    margin-top:4px;
+    font-weight:600;
+  }
+
+  .assoc-wrap {
+    margin-top:80px;
+    position:relative;
+  }
+  .assoc-label {
+    font-size:18px;
+    letter-spacing:10px;
+    color:#FF6B8B;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .assoc-name {
+    font-family:'Orbitron', sans-serif;
+    font-weight:900;
+    font-size:150px;
+    line-height:1;
+    letter-spacing:6px;
+    background:linear-gradient(180deg, #FFFFFF 0%, #7DE8F5 45%, #00F0FF 70%, #B026FF 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    position:relative;
+    filter:drop-shadow(0 0 26px rgba(0,240,255,0.55)) drop-shadow(0 0 50px rgba(176,38,255,0.35));
+    animation:flicker 4.5s infinite;
+  }
+  .assoc-name::before {
+    content:'DATRIX';
+    position:absolute;
+    left:3px; top:0;
+    color:#FF1B4C;
+    z-index:-1;
+    opacity:0.55;
+    filter:blur(1px);
+    animation:glitchshift 3.2s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 92%, 100% { opacity:1; }
+    93% { opacity:0.55; }
+    94% { opacity:1; }
+    95% { opacity:0.4; }
+    96% { opacity:1; }
+  }
+  @keyframes glitchshift {
+    0%, 88%, 100% { transform:translate(0,0); }
+    89% { transform:translate(4px,-2px); }
+    90% { transform:translate(-3px,1px); }
+    91% { transform:translate(2px,2px); }
+  }
+
+  .warn-row {
+    margin-top:46px;
+    display:flex;
+    align-items:center;
+    gap:22px;
+  }
+  .tri {
+    width:0; height:0;
+    border-left:26px solid transparent;
+    border-right:26px solid transparent;
+    border-bottom:44px solid #FFC400;
+    filter:drop-shadow(0 0 10px rgba(255,196,0,0.7));
+    position:relative;
+    animation:pulse 1.6s infinite;
+  }
+  .tri::after {
+    content:'!';
+    position:absolute;
+    left:-6px; top:16px;
+    font-family:'Orbitron', sans-serif;
+    font-weight:900;
+    font-size:22px;
+    color:#0A0A0F;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.65; transform:scale(1.08); }
+  }
+
+  .coming-soon {
+    font-family:'Orbitron', sans-serif;
+    font-weight:700;
+    font-size:52px;
+    letter-spacing:10px;
+    color:#FFFFFF;
+    text-shadow:0 0 18px rgba(255,27,76,0.85), 0 0 40px rgba(255,27,76,0.4);
+  }
+
+  .divider-tech {
+    margin-top:44px;
+    width:70%;
+    height:2px;
+    background:linear-gradient(90deg, transparent, #00F0FF, #B026FF, #FF1B4C, transparent);
+    position:relative;
+  }
+  .divider-tech .node {
+    position:absolute;
+    top:-4px;
+    width:10px; height:10px;
+    border-radius:50%;
+    background:#00F0FF;
+    box-shadow:0 0 10px #00F0FF;
+    animation:travel 3s linear infinite;
+  }
+  @keyframes travel {
+    0% { left:0%; }
+    100% { left:100%; }
+  }
+
+  .tagline {
+    margin-top:30px;
+    font-size:20px;
+    letter-spacing:3px;
+    color:#B7C4D6;
+    font-weight:500;
+    max-width:640px;
+  }
+  .tagline span {
+    color:#00F0FF;
+    font-weight:700;
+  }
+
+  .footer-row {
+    margin-top:auto;
+    display:flex;
+    gap:40px;
+    padding-top:40px;
+  }
+  .chip {
+    border:1px solid rgba(255,255,255,0.15);
+    padding:10px 22px;
+    border-radius:2px;
+    font-size:14px;
+    letter-spacing:3px;
+    color:#9FB0C4;
+    background:rgba(255,255,255,0.03);
+  }
+  .chip.red { border-color:rgba(255,27,76,0.5); color:#FF6B8B; }
+  .chip.cyan { border-color:rgba(0,240,255,0.5); color:#7DE8F5; }
+  .chip.violet { border-color:rgba(176,38,255,0.5); color:#D6A6FF; }
+
+  .corner-tag {
+    position:absolute;
+    z-index:6;
+    font-family:'Orbitron', sans-serif;
+    font-size:12px;
+    letter-spacing:3px;
+    color:rgba(0,240,255,0.75);
+  }
+  .corner-tag.tl { top:44px; left:60px; }
+  .corner-tag.tr { top:44px; right:60px; text-align:right; }
+
+  .particle {
+    position:absolute;
+    border-radius:50%;
+    z-index:3;
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform:translateY(0); opacity:0.7; }
+    50% { transform:translateY(-30px); opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <div class="hazard top"></div>
+  <div class="hazard bottom"></div>
+
+  <div class="circuit-layer">
+    <svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#00F0FF" stroke-width="1.4" fill="none" opacity="0.5">
+        <path d="M0 180 H220 L260 220 H520"/>
+        <path d="M1080 260 H820 L780 300 H540"/>
+        <path d="M0 980 H180 L220 940 H480"/>
+        <path d="M1080 1050 H860 L820 1010 H600"/>
+        <path d="M140 0 V140 L180 180"/>
+        <path d="M940 1350 V1180 L900 1140"/>
+      </g>
+      <g fill="#00F0FF">
+        <circle cx="220" cy="180" r="5"/>
+        <circle cx="520" cy="220" r="5"/>
+        <circle cx="820" cy="260" r="5"/>
+        <circle cx="540" cy="300" r="5"/>
+        <circle cx="180" cy="980" r="5"/>
+        <circle cx="480" cy="940" r="5"/>
+        <circle cx="860" cy="1050" r="5"/>
+        <circle cx="600" cy="1010" r="5"/>
+      </g>
+      <g fill="#B026FF" opacity="0.7">
+        <circle cx="140" cy="140" r="4"/>
+        <circle cx="940" cy="1180" r="4"/>
+      </g>
+      <g stroke="#FF1B4C" stroke-width="1.2" fill="none" opacity="0.35">
+        <path d="M60 500 H300 L340 540 H700 L740 500 H1020"/>
+        <path d="M60 780 H340 L380 740 H760 L800 780 H1020"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="grid-overlay"></div>
+  <div class="glow-orb o1"></div>
+  <div class="glow-orb o2"></div>
+  <div class="glow-orb o3"></div>
+  <div class="scanline"></div>
+
+  <div class="corner-tag tl">SYS.STATUS // STANDBY</div>
+  <div class="corner-tag tr">DEPT. OF TECH EVENTS<br>PROTOCOL: DATRIX-2026</div>
+
+  <div class="content">
+    <div class="college-banner">
+      <div class="college-name">IMAYAM COLLEGE OF ENGINEERING</div>
+      <div class="college-sub">DEPARTMENT ASSOCIATION EVENT</div>
+    </div>
+
+    <div class="assoc-wrap">
+      <div class="assoc-label">PRESENTING THE ASSOCIATION</div>
+      <div class="assoc-name">DATRIX</div>
+    </div>
+
+    <div class="warn-row">
+      <div class="tri"></div>
+      <div class="coming-soon">COMING SOON</div>
+      <div class="tri"></div>
+    </div>
+
+    <div class="divider-tech"><div class="node"></div></div>
+
+    <div class="tagline">Brace for a high-voltage lineup of <span>tech, code and innovation</span> — engineered to push limits.</div>
+
+    <div class="footer-row">
+      <div class="chip red">ALERT LEVEL: HIGH</div>
+      <div class="chip cyan">STAY TUNED</div>
+      <div class="chip violet">DETAILS DROPPING SOON</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
